@@ -312,6 +312,10 @@ class OneSmallTask(_EnergyModelTest):
                     'duty_cycle_pct': 20,
                     'duration_s': 2,
                     'period_ms': WORKLOAD_PERIOD_MS,
+                    'sched': {
+                        'policy': 'ENERGY',
+                        'prio': 0,
+                    },
                 },
                 'tasks' : 1,
                 'prefix' : 'many',
@@ -347,6 +351,10 @@ class ThreeSmallTasks(_EnergyModelTest):
                     'duty_cycle_pct': 20,
                     'duration_s': 2,
                     'period_ms': WORKLOAD_PERIOD_MS,
+                    'sched': {
+                        'policy': 'ENERGY',
+                        'prio': 0,
+                    },
                 },
                 'tasks' : 3,
                 'prefix' : 'many',
@@ -373,6 +381,10 @@ class TwoBigTasks(_EnergyModelTest):
                     'duty_cycle_pct': 80,
                     'duration_s': 2,
                     'period_ms': WORKLOAD_PERIOD_MS,
+                    'sched': {
+                        'policy': 'ENERGY',
+                        'prio': 0,
+                    },
                 },
                 'tasks' : 2,
                 'prefix' : 'many',
@@ -402,6 +414,10 @@ class TwoBigThreeSmall(_EnergyModelTest):
                             'duty_cycle_pct': 70,
                             'duration_s': 2,
                             'period_ms': WORKLOAD_PERIOD_MS,
+                            'sched': {
+                                'policy': 'ENERGY',
+                                'prio': 0,
+                            },
                         },
                         'tasks' : 2,
                     },
@@ -411,6 +427,10 @@ class TwoBigThreeSmall(_EnergyModelTest):
                             'duty_cycle_pct': 10,
                             'duration_s': 2,
                             'period_ms': WORKLOAD_PERIOD_MS,
+                            'sched': {
+                                'policy': 'ENERGY',
+                                'prio': 0,
+                            },
                         },
                         'tasks' : 3,
                     },
@@ -443,6 +463,10 @@ class RampUp(_EnergyModelTest):
                             "end_pct"   : 70,
                             "delta_pct" :  5,
                             "time_s"    :  2,
+                            'sched': {
+                                'policy': 'ENERGY',
+                                'prio': 0,
+                            },
                          },
                     },
                 },
@@ -483,6 +507,10 @@ class RampDown(_EnergyModelTest):
                             "end_pct"   :  5,
                             "delta_pct" :  5,
                             "time_s"    :  2,
+                            'sched': {
+                                'policy': 'ENERGY',
+                                'prio': 0,
+                            },
                          },
                     },
                 },
@@ -514,7 +542,11 @@ class EnergyModelWakeMigration(_EnergyModelTest):
                             'start_pct': 10,
                             'end_pct': 50,
                             'time_s': 2,
-                            'loops': 2
+                            'loops': 2,
+                            'sched': {
+                                'policy': 'ENERGY',
+                                'prio': 0,
+                            },
                         },
                         # Create one task for each big cpu
                         'tasks' : 'big',
