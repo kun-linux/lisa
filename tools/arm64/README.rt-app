@@ -1,6 +1,6 @@
 rt-app built from:
 
-git@github.com:scheduler-tools/rt-app.git 482e47a0b859
+git@github.com:qperret/rt-app.git 3fc4d80
 
 Configured with:
 
@@ -12,7 +12,7 @@ export ac_cv_lib_json_c_json_object_from_file=yes
 
 json-c built from:
 
-https://github.com/json-c/json-c 815778448348
+https://github.com/json-c/json-c cf91362
 
 Configured (as per rt-app's doc/tutorial.txt) with:
 
