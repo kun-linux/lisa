@@ -285,7 +285,7 @@ class RTA(Workload):
         # Setup default scheduling class
         if 'policy' in self.sched:
             policy = self.sched['policy'].upper()
-            if policy not in ['OTHER', 'FIFO', 'RR', 'DEADLINE']:
+            if policy not in ['OTHER', 'FIFO', 'RR', 'DEADLINE', 'ENERGY']:
                 raise ValueError('scheduling class {} not supported'\
                         .format(policy))
             global_conf['default_policy'] = 'SCHED_' + self.sched['policy']
@@ -309,9 +309,9 @@ class RTA(Workload):
             if policy == 'DEFAULT':
                 task_conf['policy'] = global_conf['default_policy']
                 sched_descr = 'sched: using default policy'
-            elif policy not in ['OTHER', 'FIFO', 'RR', 'DEADLINE']:
+            elif policy not in ['OTHER', 'FIFO', 'RR', 'DEADLINE', 'ENERGY']:
                 raise ValueError('scheduling class {} not supported'\
-                        .format(task['sclass']))
+                        .format(policy))
             else:
                 task_conf.update(task['sched'])
                 task_conf['policy'] = 'SCHED_' + policy
