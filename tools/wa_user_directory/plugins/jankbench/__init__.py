@@ -83,6 +83,11 @@ class Jankbench(ApkWorkload):
         Parameter('times', kind=int, default=1, constraint=lambda x: x > 0,
                   description=('Specifies the number of times the benchmark will be run in a "tight '
                                'loop", i.e. without performing setup/teardown in between.')),
+        Parameter('landscape', kind=boolean, default=False,
+                  description="""
+                  Configure the screen in landscape mode, otherwise ensure
+                  portrait orientation by default. Default is ``False``.
+                  """),
     ]
 
     def initialize(self, context):
@@ -96,6 +101,9 @@ class Jankbench(ApkWorkload):
         super(Jankbench, self).setup(context)
         self.monitor = self.target.get_logcat_monitor(REGEXPS.values())
         self.monitor.start()
+
+        self._original_orientation = self.target.get_rotation()
+        self.target.set_rotation(1 if self.landscape else 0)
 
         self.command = (
             'am start -n com.android.benchmark/.app.RunLocalBenchmarksActivity '
@@ -151,3 +159,4 @@ class Jankbench(ApkWorkload):
 
     def teardown(self, context):
         self.monitor.stop()
+        self.target.set_rotation(self._original_orientation)
