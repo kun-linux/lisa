@@ -1,0 +1,9 @@
+export AOSP_ROOT=/data/work/aosp
+export ANDROID_PREBUILTS=$AOSP_ROOT/prebuilts
+
+export PATH_DTC=$ANDROID_PREBUILTS/misc/linux-x86/dtc
+export PATH_GCC=$ANDROID_PREBUILTS/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin
+export PATH_MKI=$ANDROID_PREBUILTS/misc/linux-x86/libufdt
+export PATH_LZ4=$ANDROID_PREBUILTS/misc/linux-x86/lz4
+
+export PATH=$PATH_GCC:$PATH_DTC:$PATH_MKI:$PATH_LZ4:$PATH
