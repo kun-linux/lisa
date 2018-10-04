@@ -21,3 +21,5 @@ workloads:
     workload_parameters:
       version: 2.4
     iterations: 3
+    workload_parameters:
+      version: 2.4
