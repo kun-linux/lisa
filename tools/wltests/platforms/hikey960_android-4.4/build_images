@@ -16,6 +16,6 @@ source "${PLATFORM_PATH}/definitions"
 ./android/update_boot_img.sh; ERROR=$?
 [ $ERROR -eq 0 ] || exit $ERROR
 
-./android/create_dt_img.sh; ERROR=$?
-[ $ERROR -eq 0 ] || exit $ERROR
+#./android/create_dt_img.sh; ERROR=$?
+#[ $ERROR -eq 0 ] || exit $ERROR
 

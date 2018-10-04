@@ -3,7 +3,21 @@
 # the workload's default, and target and instrumentation configuration will
 # either be read from $LISA_HOME/tools/wltests/wa_user_directory/config.yaml or
 # the defaults will be used.
+global:
+  # Collect energy data, ftrace files, and dmesg
+  # You may want to edit your config.yaml to set up the energy_measurement
+  # instrument (an example configuration is provided in this repo).
+  instrumentation: [energy_measurement, dmesg]
+
+sections:
+  - id: default      # Just a human-readable name
+    classifiers:     # Will be used to map job output to 'tags' when analysing
+      tag: dflt
+
+#
 
 workloads:
   - name: exoplayer
+    workload_parameters:
+      version: 2.4
     iterations: 3
