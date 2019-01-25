@@ -242,7 +242,7 @@ hotplug_online_all() {
 # Misc
 ################################################################################
 
-read_tree_values() {
+read_tree_tgz_b64() {
     BASEPATH=$1
     MAXDEPTH=$2
 
@@ -251,17 +251,21 @@ read_tree_values() {
         exit 1
     fi
 
-    PATHS=$($BUSYBOX find $BASEPATH -follow -maxdepth $MAXDEPTH)
-    i=0
-    for path in $PATHS; do
-        i=$(expr $i + 1)
-        if [ $i -gt 1 ]; then
-            break;
-        fi
+    TMPDIR=$($BUSYBOX mktemp -d)
+
+    # 'tar' doesn't work as expected on debugfs, so copy the tree first to
+    # workaround the issue
+    cd $BASEPATH
+    for CUR_FILE in $($BUSYBOX find . -follow -type f -maxdepth $MAXDEPTH); do
+        $BUSYBOX cp --parents $CUR_FILE $TMPDIR/ 2> /dev/null
     done
-    if [ $i -gt 1 ]; then
-        $BUSYBOX grep -s '' $PATHS
-    fi
+
+    cd $TMPDIR
+    $BUSYBOX tar cz * | $BUSYBOX base64
+
+    # Clean-up the tmp folder since we won't need it any more
+    cd ..
+    rm -rf $TMPDIR
 }
 
 get_linux_system_id() {
@@ -334,8 +338,8 @@ ftrace_get_function_stats)
 hotplug_online_all)
 	hotplug_online_all
     ;;
-read_tree_values)
-	read_tree_values $*
+read_tree_tgz_b64)
+	read_tree_tgz_b64 $*
     ;;
 get_linux_system_id)
 	get_linux_system_id $*

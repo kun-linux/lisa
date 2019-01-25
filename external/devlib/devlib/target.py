@@ -13,6 +13,9 @@
 # limitations under the License.
 #
 
+import io
+import base64
+import gzip
 import os
 import re
 import time
@@ -684,23 +687,42 @@ class Target(object):
         timeout = duration + 10
         self.execute('sleep {}'.format(duration), timeout=timeout)
 
-    def read_tree_values_flat(self, path, depth=1, check_exit_code=True):
-        command = 'read_tree_values {} {}'.format(quote(path), depth)
+    def read_tree_values_flat(self, path, depth=1, check_exit_code=True, decode_unicode=True):
+        command = 'read_tree_tgz_b64 {} {}'.format(quote(path), depth)
         output = self._execute_util(command, as_root=self.is_rooted,
                                     check_exit_code=check_exit_code)
 
         accumulator = defaultdict(list)
-        for entry in output.strip().split('\n'):
-            if ':' not in entry:
-                continue
-            path, value = entry.strip().split(':', 1)
-            accumulator[path].append(value)
+
+        # Unpack the archive in memory
+        tar_gz = base64.b64decode(output)
+        tar_gz_bytes = io.BytesIO(tar_gz)
+        tar_buf = gzip.GzipFile(fileobj=tar_gz_bytes).read()
+        tar_bytes = io.BytesIO(tar_buf)
+        with tarfile.open(fileobj=tar_bytes) as tar:
+            for member in tar.getmembers():
+                try:
+                    content_f = tar.extractfile(member)
+                # ignore exotic members like sockets
+                except Exception:
+                    continue
+                # if it is a file and not a folder
+                if content_f:
+                    content = content_f.read()
+                    if decode_unicode:
+                        try:
+                            content = str(content.decode('utf-8').strip())
+                        except:
+                            content = ''
+
+                    name = self.path.join(path, member.name.strip())
+                    accumulator[name].append(content)
 
         result = {k: '\n'.join(v).strip() for k, v in accumulator.items()}
         return result
 
-    def read_tree_values(self, path, depth=1, dictcls=dict, check_exit_code=True):
-        value_map = self.read_tree_values_flat(path, depth, check_exit_code)
+    def read_tree_values(self, path, depth=1, dictcls=dict, check_exit_code=True, decode_unicode=True):
+        value_map = self.read_tree_values_flat(path, depth, check_exit_code, decode_unicode)
         return _build_path_tree(value_map, path, self.path.sep, dictcls)
 
     # internal methods
